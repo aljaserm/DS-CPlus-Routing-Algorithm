@@ -1,0 +1,191 @@
+#include <iostream>
+#include <string>
+using namespace std;
+class project
+{
+public:
+	project::project();
+	void project::enter();//function to enter info
+	int project::return_start();//returns start to main
+	int project::return_end();//returns end to main
+	void project::display();//prints display
+	void project::moves();//finds how many moves in each direction
+	int project::make_a_move();//moves the point to the next calculated point
+private:
+	char number[100000];
+	int end;
+	int start;
+	int size;
+	int numbers;
+	int start_number;
+	int end_number;
+	int movement;
+	int lrmove, udmove;
+	int current;
+	
+};
+int main()
+{
+	int point,ender;//this is how the movement is tracked
+	project data;
+	string answer = "Y";
+	while (answer == "Y" || answer == "y")
+	{
+		data.enter();
+		data.display();
+		point = data.return_start();//initializing point at start 
+		ender = data.return_end();//intialzizes end
+		data.moves();
+
+		while (point != ender)//don't stop until the point = end
+		{
+			system("cls");//clear screen to make the viewing easier
+			point = data.make_a_move();//moves to the next point that was found
+
+			data.display();//show what the new point is and make the move
+			data.moves();//calculate what move to make based on the new point
+
+		}
+		cout << "Would you like to continue? (Y/N)" << endl;
+		cin >> answer;
+	}
+	return 0;
+}
+project::project()
+{
+
+}
+
+void project::enter()
+
+{
+	
+	//enter in Info, start, end, size
+	cout << "Enter size 3-10"<<endl;
+	cin >> size;
+	numbers = size*size;
+	cout << "Enter start"<<endl;
+	cin >> start_number;
+	start = start_number - 1;
+	cout << "Enter end" << endl;
+	cin >> end_number;
+	end = end_number - 1;
+	//initiate array that will hold the correct amount of possible points based on the size given
+	for (int i = 0; i < numbers; i++)
+	{
+		number[i] = '.';
+	}
+
+number[start] = 'S';
+number[end] = 'E';
+
+}
+
+
+
+void project::display()
+{
+	int count=0;
+	int counter = 0;
+	int blah=0;
+	//count has to be less than the number used, because arrays go 0-(n-1) while human thought goes 1-n
+	while (count <= numbers-1)
+	{
+		if (counter == size-1)//this will end the line at the correct point to keep a square looking matrix
+		{	
+			
+			cout << number[blah] << endl << endl;
+			blah = blah - ((size*(size - 1)) - 1);
+			counter = 0;
+		}
+		
+		else 
+		{
+			cout << number[blah]<<"    ";
+			blah = blah + size;
+			counter = counter + 1;
+		}
+		
+		count++;
+		
+	}
+	system("pause");
+}
+int project::return_start()
+{
+	//create a variable to be able to move the point that the algorithm is currently working on
+	current = start;
+	//returns start to main
+	return start;
+
+}
+int project::return_end()
+{
+	//returns end to main to compare variables for while loop in main
+	return end;
+}
+void project::moves()
+{	
+	//main logic of code
+	//lrmove finds how many moves right it has to make, if it is negative then that means a left move
+	lrmove = (end/ size) - ((current) / size);
+	//udmove fins how many moves up needed, if it is negative then it will be a down move
+ 	udmove = lrmove * size + current+1 - end_number;
+}
+int project::make_a_move()
+{
+	/*Depending on the number of moves needed (found in moves function) this will find what the new point is*/
+	if (udmove < 0 && lrmove > 0)
+	{
+		//up-right move
+		movement = size + 1;
+	}
+	else if (udmove < 0 && lrmove < 0)
+	{
+		//down-left move
+		movement = (size - 1)*-1;
+	}
+	else if (udmove > 0 && lrmove < 0)
+	{
+		//up-left move
+		movement = (size + 1)*-1;
+	}
+	else if (udmove > 0 && lrmove > 0)
+	{
+		//down-right move
+		movement = (size - 1);
+	}
+	else if (udmove == 0 && lrmove > 0)
+	{
+		//only right move
+		movement = size;
+	}
+	else if (udmove == 0 && lrmove < 0)
+	{
+		//only left move
+		movement = 0-size;
+	}
+	else if (udmove > 0 && lrmove ==0)
+	{
+		//only up move
+		movement = -1;
+	}
+	else if (udmove < 0 && lrmove == 0)
+	{
+		//only down move
+		movement = 1;
+	}
+	current = current + movement;
+	if (current != end)
+	{
+		//this way you can still view the endpoint when it is reached
+		//shows the path taken through A
+		number[current] = 'A';
+	}
+
+	
+	return current;
+}
+
+
+
